@@ -1,0 +1,10 @@
+chumpy
+dataclasses 
+json_tricks
+matplotlib
+munkres
+opencv-python
+pillow
+scipy
+torchvision
+xtcocotools>=1.8

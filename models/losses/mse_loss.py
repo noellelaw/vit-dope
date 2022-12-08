@@ -40,7 +40,6 @@ class JointsMSELoss(nn.Module):
         return loss / num_joints * self.loss_weight
 
 
-@LOSSES.register_module()
 class CombinedTargetMSELoss(nn.Module):
     """MSE loss for combined target.
         CombinedTarget: The combination of classification target
@@ -89,7 +88,6 @@ class CombinedTargetMSELoss(nn.Module):
         return loss / num_joints * self.loss_weight
 
 
-@LOSSES.register_module()
 class JointsOHKMMSELoss(nn.Module):
     """MSE loss with online hard keypoint mining.
 

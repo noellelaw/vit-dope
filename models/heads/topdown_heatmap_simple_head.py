@@ -4,7 +4,7 @@ import torch.nn as nn
 from mmcv.cnn import (build_conv_layer, build_norm_layer, build_upsample_layer,
                       constant_init, normal_init)
 
-from core.evaluation import pose_pck_accuracy
+from core.evaluation.top_down_eval import pose_pck_accuracy
 from core.post_processing import flip_back
 from models.losses.mse_loss import JointsMSELoss
 from models.utils.ops import resize

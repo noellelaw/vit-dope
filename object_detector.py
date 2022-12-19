@@ -4,6 +4,7 @@
 #---------------------------------------------------------------------------------------------------------------
 # Imports
 #---------------------------------------------------------------------------------------------------------------
+from __future__ import print_function
 import copy
 import os
 import os.path as osp
@@ -48,13 +49,21 @@ from mmcv.runner import get_dist_info, init_dist, set_random_seed
 from collections import OrderedDict
 import tempfile
 import random
-from __future__ import print_function
 
 from models.backbones import ViT
 from core.evaluation.top_down_eval import (keypoint_pck_accuracy,
                             keypoints_from_heatmaps,
                             pose_pck_accuracy)
 from models.heads import TopdownHeatmapSimpleHead
+
+#---------------------------------------------------------------------------------------------------------------
+# Config params for dope
+#---------------------------------------------------------------------------------------------------------------
+thresh_angle = 0.5
+thresh_map = 0.01
+sigma = 3
+thresh_points = 0.1
+
 #---------------------------------------------------------------------------------------------------------------
 # Make a grid of images for testing purposes
 #---------------------------------------------------------------------------------------------------------------
@@ -198,7 +207,6 @@ class ObjectDetector(object):
             map_ori = belief.cpu().data.numpy()
 
             map = gaussian_filter(belief.cpu().data.numpy(), sigma=sigma)
-            print(map.shape)
             p = 1
             map_left = np.zeros(map.shape)
             map_left[p:,:] = map[:-p,:]

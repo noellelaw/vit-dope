@@ -5,7 +5,6 @@
 #---------------------------------------------------------------------------------------------------------------
 # Make a grid of images for testing purposes
 #---------------------------------------------------------------------------------------------------------------
-
 def make_grid(tensor, nrow=8, padding=2,
               normalize=False, range_=None, scale_each=False, pad_value=0):
     """Make a grid of images.

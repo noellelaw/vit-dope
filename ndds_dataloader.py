@@ -1,6 +1,33 @@
 # Code to loads NDDS style training data conforming to DOPE format
 # Slightly adapted from https://github.com/NVlabs/Deep_Object_Pose
 
+#---------------------------------------------------------------------------------------------------------------
+# IMPORTS
+#---------------------------------------------------------------------------------------------------------------
+import copy
+import os
+from os.path import exists
+import time
+import warnings
+import numpy as np
+import json
+import datetime
+import glob
+import cv2
+import colorsys
+import math
+
+import torch
+import torchvision.transforms as transforms
+import torch.utils.data as data
+
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageEnhance
+
+from math import acos
+from math import sqrt
+from math import pi  
 
 #---------------------------------------------------------------------------------------------------------------
 # Make a grid of images for testing purposes

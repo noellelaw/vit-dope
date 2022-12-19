@@ -65,7 +65,7 @@ NAME_FILE = 'epoch'
 MAX_NORM = 1.
 NORM_TYPE = 2
 # For Balanced MSE
-noise_var = 0.1
+BMCE_LOSS = 0.1
 # For inference
 thresh_angle=0.5
 thresh_map=0.01
@@ -103,7 +103,7 @@ class ViTDopeNetwork(nn.Module):
                   drop_path_rate=0.3,
     )
     # Init ViT weights from ViT MAE trained on image net
-    if PRETRAINED is not == '':
+    if not PRETRAINED == '':
         backbone.init_weights(pretrained=PRETRAINED)
     # Set classical decoder head for belief maps
     belief_head = TopdownHeatmapSimpleHead(
@@ -148,9 +148,9 @@ def get_bmce_loss(preds, targets):
         I = torch.eye(H*W)
         belief = preds[:,i,:,:].reshape( (B,resize_to) ).cpu()
         target = targets[:,i,:,:].reshape( (B,resize_to) ).cpu() # logit size: [batch, batch]
-        logits = MVN( belief.unsqueeze(1), (noise_var*I) ).log_prob( target(0) )  
+        logits = MVN( belief.unsqueeze(1), (BMCE_LOSS*I) ).log_prob( target.unsqueeze(0) )  
         loss_temp = cross_entropy(logits, torch.arange(B))  # contrastive-like loss
-        loss_temp = loss * (2 * noise_var)
+        loss_temp = loss_temp * (2 * BMCE_LOSS)
         loss += loss_temp
     return loss
 
@@ -193,7 +193,7 @@ def _run_network(epoch, loader, train=True):
             loss_tmp = ((l - target_affinity) * (l-target_affinity)).mean()
             loss += loss_tmp 
         # Get balanced mce loss for belief maps  
-        loss += get_bmse_loss(output_affinities, target_affinity)
+        loss += get_bmce_loss(output_affinities, target_affinity)
 
         # Update weights
         if train:

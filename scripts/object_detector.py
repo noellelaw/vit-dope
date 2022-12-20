@@ -69,7 +69,7 @@ dimensions= {
     "cracker": [16.403600692749023,21.343700408935547,7.179999828338623]
     }
 
-camera_matrix = np.array([641.5, 0, 320.0 0, 641.5, 240.0, 0, 0, 1]).reshape((3,3))
+camera_matrix = np.array([641.5, 0, 320.0, 0, 641.5, 240.0, 0, 0, 1]).reshape((3,3))
 distortion_model = 'plumb_bob'
 distortion_coeffs = np.array([0, 0, 0, 0, 0])
 rectification_matrix =  np.array([1, 0, 0, 0, 1, 0, 0, 0, 1]).reshape((3,3))

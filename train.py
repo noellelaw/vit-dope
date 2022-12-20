@@ -305,6 +305,7 @@ with open (OUT_FLDR+'/loss_test.csv','w') as file:
 #---------------------------------------------------------------------------------------------------------------
 # Start training
 #---------------------------------------------------------------------------------------------------------------
+print ("Start:" , datetime.datetime.now().time())
 for epoch in range(1, EPOCHS + 1):
     # Run training
     if not trainingdata is None:

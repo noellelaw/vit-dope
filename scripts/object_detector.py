@@ -55,15 +55,25 @@ from core.evaluation.top_down_eval import (keypoint_pck_accuracy,
                             keypoints_from_heatmaps,
                             pose_pck_accuracy)
 from models.heads import TopdownHeatmapSimpleHead
+from scripts.pnp_solver import CuboidPNPSolver
 
 #---------------------------------------------------------------------------------------------------------------
-# Config params for dope
+# Config params for inference
 #---------------------------------------------------------------------------------------------------------------
 thresh_angle = 0.5
 thresh_map = 0.01
 sigma = 3
 thresh_points = 0.1
 
+dimensions= {
+    "cracker": [16.403600692749023,21.343700408935547,7.179999828338623]
+    }
+
+camera_matrix = np.array([641.5, 0, 320.0 0, 641.5, 240.0, 0, 0, 1]).reshape((3,3))
+distortion_model = 'plumb_bob'
+distortion_coeffs = np.array([0, 0, 0, 0, 0])
+rectification_matrix =  np.array([1, 0, 0, 0, 1, 0, 0, 0, 1]).reshape((3,3))
+projection_matrix =  np.array([641.5, 0, 320.0, 0, 0, 641.5, 240.0, 0, 0, 0, 1, 0]).reshape((3,4))   
 #---------------------------------------------------------------------------------------------------------------
 # Make a grid of images for testing purposes
 #---------------------------------------------------------------------------------------------------------------
@@ -175,25 +185,34 @@ class ObjectDetector(object):
     '''This class contains methods for object detection'''
 
     @staticmethod
-    def find_object_poses(vertex, aff):
+    def find_object_poses(vertex, aff, obj = 'cracker_box'):
         '''Detect objects given network output'''
 
         # Detect objects from belief maps and affinities
         objects, all_peaks = ObjectDetector.find_objects(vertex, aff)
         detected_objects = []
-        obj_name = 'mustard'
+        obj_name = obj
+        pnp_solver = CuboidPNPSolver(obj_name, 
+                                    camera_matrix, 
+                                    cuboid3d = None,
+                                    dist_coeffs = distortion_coeffs)
 
         for obj in objects:
             points = obj[1] + [(obj[0][0]*8, obj[0][1]*8)]
             cuboid2d = np.copy(points)
+            location, quaternion, projected_points = pnp_solver.solve_pnp(points)
 
             # Save results
             detected_objects.append({
                 'name': obj_name,
+                'location': location,
+                'quaternion': quaternion,
                 'cuboid2d': cuboid2d,
+                'projected_points': projected_points,
                 'score': obj[-1],
             })
-        print(detected_objects)
+        print('Objects detected: ', 
+        detected_objects)
         return detected_objects
 
     @staticmethod

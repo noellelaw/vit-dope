@@ -73,7 +73,7 @@ camera_matrix = np.array([641.5, 0, 320.0 0, 641.5, 240.0, 0, 0, 1]).reshape((3,
 distortion_model = 'plumb_bob'
 distortion_coeffs = np.array([0, 0, 0, 0, 0])
 rectification_matrix =  np.array([1, 0, 0, 0, 1, 0, 0, 0, 1]).reshape((3,3))
-projection_matrix =  np.array([641.5, 0, 320.0,, 0, 0, 641.5, 240.0, 0, 0, 0, 1, 0]).reshape((3,4))   
+projection_matrix =  np.array([641.5, 0, 320.0, 0, 0, 641.5, 240.0, 0, 0, 0, 1, 0]).reshape((3,4))   
 #---------------------------------------------------------------------------------------------------------------
 # Make a grid of images for testing purposes
 #---------------------------------------------------------------------------------------------------------------

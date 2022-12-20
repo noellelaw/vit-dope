@@ -55,7 +55,7 @@ from core.evaluation.top_down_eval import (keypoint_pck_accuracy,
                             keypoints_from_heatmaps,
                             pose_pck_accuracy)
 from models.heads import TopdownHeatmapSimpleHead
-from scripts.pnp_solver import CuboidPNPSolver
+#from scripts.pnp_solver import CuboidPNPSolver
 
 #---------------------------------------------------------------------------------------------------------------
 # Config params for inference
@@ -192,23 +192,25 @@ class ObjectDetector(object):
         objects, all_peaks = ObjectDetector.find_objects(vertex, aff)
         detected_objects = []
         obj_name = obj
+        '''
         pnp_solver = CuboidPNPSolver(obj_name, 
                                     camera_matrix, 
                                     cuboid3d = None,
                                     dist_coeffs = distortion_coeffs)
+        '''
 
         for obj in objects:
             points = obj[1] + [(obj[0][0]*8, obj[0][1]*8)]
             cuboid2d = np.copy(points)
-            location, quaternion, projected_points = pnp_solver.solve_pnp(points)
+            #location, quaternion, projected_points = pnp_solver.solve_pnp(points)
 
             # Save results
             detected_objects.append({
                 'name': obj_name,
-                'location': location,
-                'quaternion': quaternion,
+                #'location': location,
+                #'quaternion': quaternion,
                 'cuboid2d': cuboid2d,
-                'projected_points': projected_points,
+                #'projected_points': projected_points,
                 'score': obj[-1],
             })
         print('Objects detected: ', 

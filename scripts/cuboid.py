@@ -143,4 +143,3 @@ class Cuboid3d():
                                 camera_intrinsic_matrix, dist_coeffs)
 
         return Cuboid2d(projected_vertices)
-Footer

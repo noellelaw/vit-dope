@@ -76,8 +76,18 @@ class TopdownHeatmapSimpleHeadLayerLoss(TopdownHeatmapBaseHead):
             raise TypeError('extra should be dict or None.')
 
         if num_deconv_layers > 0:
-            self.deconv_layers = self._make_deconv_layer(
-                num_deconv_layers,
+            # self.deconv_layers = self._make_deconv_layer(
+            #     num_deconv_layers,
+            #     num_deconv_filters,
+            #     num_deconv_kernels,
+            # )
+            self.deconv_1 = self._make_deconv_layer(
+                1,
+                num_deconv_filters,
+                num_deconv_kernels,
+            )
+            self.deconv_2 = self._make_deconv_layer(
+                1,
                 num_deconv_filters,
                 num_deconv_kernels,
             )
@@ -200,14 +210,17 @@ class TopdownHeatmapSimpleHeadLayerLoss(TopdownHeatmapBaseHead):
 
     def forward(self, x):
         """Forward function."""
-        x = self._transform_inputs(x)
-        # x = self.deconv_layers(x)
         conv_layer_outputs = []
-        for layer in self.deconv_layers:
-            x = layer(x)
-            conv_layer_outputs.append(x)
+        x = self._transform_inputs(x)
+        x = self.deconv1(x)
+        deconv_l1 = x
+        x = self.deconv2(x)
+        deconv_l2 = x
+        # x = self.deconv_layers(x)
+
+
         x = self.final_layer(x)
-        return conv_layer_outputs + [x]
+        return [deconv_l1, deconv_l2, x]
 
     def inference_model(self, x, flip_pairs=None):
         """Inference function.
@@ -343,8 +356,8 @@ class TopdownHeatmapSimpleHeadLayerLoss(TopdownHeatmapBaseHead):
             layers.append(nn.ReLU(inplace=True))
             self.in_channels = planes
 
-        return layers
-        # return nn.Sequential(*layers)
+        # return layers
+        return nn.Sequential(*layers)
 
     def init_weights(self):
         """Initialize model weights."""

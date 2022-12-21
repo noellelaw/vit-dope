@@ -343,7 +343,8 @@ class TopdownHeatmapSimpleHeadLayerLoss(TopdownHeatmapBaseHead):
             layers.append(nn.ReLU(inplace=True))
             self.in_channels = planes
 
-        return nn.Sequential(*layers)
+        return layers
+        # return nn.Sequential(*layers)
 
     def init_weights(self):
         """Initialize model weights."""

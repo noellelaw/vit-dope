@@ -81,12 +81,12 @@ class TopdownHeatmapSimpleHeadLayerLoss(TopdownHeatmapBaseHead):
             #     num_deconv_filters,
             #     num_deconv_kernels,
             # )
-            self.deconv_1 = self._make_deconv_layer(
+            self.deconv1 = self._make_deconv_layer(
                 1,
                 [256],
                 [4],
             )
-            self.deconv_2 = self._make_deconv_layer(
+            self.deconv2 = self._make_deconv_layer(
                 1,
                 [256],
                 [4],

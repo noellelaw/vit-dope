@@ -203,7 +203,7 @@ class TopdownHeatmapSimpleHeadLayerLoss(TopdownHeatmapBaseHead):
         x = self._transform_inputs(x)
         # x = self.deconv_layers(x)
         conv_layer_outputs = []
-        for layer in self.deconv_layers():
+        for layer in self.deconv_layers:
             x = layer(x)
             conv_layer_outputs.append(x)
         x = self.final_layer(x)

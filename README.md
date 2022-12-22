@@ -21,6 +21,3 @@ Predicted 3D object pose estimation projected on original input image:
 ViTDope Model visualization of belief map vertex outputs throughout training:
 ![Alt text](https://github.com/noellelaw/vit-dope/blob/main/figures/progress.png?raw=true "ViTDope Model visualization of belief map vertex outputs throughout training.")
 
-Code has been partially adapted from the following two works: 
-* [Deep Object Pose Estimation] (https://github.com/NVlabs/Deep_Object_Pose)
-* [ViTPose](https://github.com/ViTAE-Transformer/ViTPose)

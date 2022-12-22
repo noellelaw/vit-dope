@@ -1,4 +1,4 @@
-# ViTDope
+# ViTDope: An exploration of vision transformers for deep object pose estimation
 ![Alt text](https://github.com/noellelaw/vit-dope/blob/main/figures/model.png?raw=true "ViTDope Model Architecture")
 ViTDope is a vision-transformer based model for detection and 6-DoF pose estimation of **known objects** from an RGB camera. The network has been trained on the cracker box YCB objects. 
 
@@ -16,5 +16,7 @@ Weights for cracker box at epoch 62 can be found [here](https://drive.google.com
 
 Predicted 3D object pose estimation projected on original input image: 
 ![Alt text](https://github.com/noellelaw/vit-dope/blob/main/figures/viz.png?raw=true "Predicted 3D object pose estimation projected on original input image.")
+
+
 ViTDope Model visualization of belief map vertex outputs throughout training:
 ![Alt text](https://github.com/noellelaw/vit-dope/blob/main/figures/progress.png?raw=true "ViTDope Model visualization of belief map vertex outputs throughout training.")

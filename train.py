@@ -65,7 +65,7 @@ NAME_FILE = 'epoch'
 MAX_NORM = 1.
 NORM_TYPE = 2
 # For Balanced MSE
-BMCE_LOSS = 0.1
+BMSE_LOSS = 0.1
 # For inference
 thresh_angle=0.5
 thresh_map=0.01
@@ -139,18 +139,18 @@ class ViTDopeNetwork(nn.Module):
 #---------------------------------------------------------------------------------------------------------------
 # Get balanced mce loss
 #---------------------------------------------------------------------------------------------------------------
-def get_bmce_loss(preds, targets):
+def get_bmse_loss(preds, targets):
     B,N,H,W = preds.shape # Batch size, num outputs, height, width
     resize_to = H*W
     loss = 0
     # Is there a more readable way to code this?
     for i in range(N):         
-        I = torch.eye(H*W)
+        I = torch.eye(resize_to)
         belief = preds[:,i,:,:].reshape( (B,resize_to) ).cpu()
         target = targets[:,i,:,:].reshape( (B,resize_to) ).cpu() # logit size: [batch, batch]
         logits = MVN( belief.unsqueeze(1), (BMCE_LOSS*I) ).log_prob( target.unsqueeze(0) )  
         loss_temp = cross_entropy(logits, torch.arange(B))  # contrastive-like loss
-        loss_temp = loss_temp * (2 * BMCE_LOSS)
+        loss_temp = loss_temp * (2 * BMSE_LOSS)
         loss += loss_temp
     return loss
 
@@ -177,23 +177,11 @@ def _run_network(epoch, loader, train=True):
         # Get predictions
         output_belief, output_affinities = net(data) 
 
-        # Belief maps loss
-        for l in output_belief: #output, each belief map layers. 
-            if loss is None:
-                loss = ((l - target_belief) * (l-target_belief)).mean()
-                
-            else:
-                loss_tmp = ((l - target_belief) * (l-target_belief)).mean()
-                loss += loss_tmp
-        # Get balanced mce loss for belief maps        
-        loss += get_bmce_loss(output_belief, target_belief)
+        # Get balanced mse loss for belief maps        
+        loss += get_bmse_loss(output_belief, target_belief)
 
         # Affinities loss
-        for l in output_affinities: #output, each belief map layers. 
-            loss_tmp = ((l - target_affinity) * (l-target_affinity)).mean()
-            loss += loss_tmp 
-        # Get balanced mce loss for belief maps  
-        loss += get_bmce_loss(output_affinities, target_affinity)
+        loss += get_bmse_loss(output_affinities, target_affinity)
 
         # Update weights
         if train:
